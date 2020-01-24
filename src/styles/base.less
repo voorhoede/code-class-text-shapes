@@ -1,0 +1,147 @@
+@brand-yellow: #ffe400;
+@brand-pastel: #fffed9;
+@brand-blue: #0000ff;
+@brand-grey-dark: #b3b3b3;
+@brand-grey-light: #f3f3f3;
+@white: #ffffff;
+
+@breakpoint: 1024px;
+@spacing-default: 1rem;
+
+html {
+	height: 100%;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	background-color: @white;
+}
+
+.cc-header,
+.cc-navigation,
+.cc-content {
+	flex: 0 0 auto;
+	padding: @spacing-default;
+	color: @brand-blue;
+
+	@media (min-width: @breakpoint) {
+		padding: @spacing-default calc(~"49.9% - " (@breakpoint / 2) ~ " + 2rem");
+	}
+}
+
+.cc-content {
+	padding-top: @spacing-default*2;
+	background-color: @brand-pastel;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 1rem;
+
+	h1, h2 {
+		margin: 0 0 @spacing-default 0;
+	}
+
+	h1 {
+		font-size: 1.4rem;
+	}
+
+	h2 {
+		font-size: 1.2rem;
+	}
+
+	p {
+		margin: 0 0 @spacing-default 0;
+		line-height: 1.5;
+	}
+
+	ol,
+	ul {
+		margin: 0 0 @spacing-default 0;
+		padding-left: 1.15rem;
+
+		li {
+			margin-bottom: .2rem;
+		}
+	}
+}
+
+.cc-header {
+	border-bottom: 3px solid @brand-blue;
+	background: @brand-yellow;
+
+	.cc-title {
+		margin: 0 0 0.2rem 0;
+		font-size: 1rem;
+		font-weight: normal;
+	}
+
+	.cc-subtitle {
+		font-size: 1.5rem;
+		font-weight: bold;
+	}
+}
+
+.cc-logo {
+	width: 50px;
+	height: auto;
+	margin-right: @spacing-default;
+	float: left;
+}
+
+.cc-navigation {
+	padding-top: .7rem;
+	padding-bottom: .7rem;
+	border-bottom: 3px solid @brand-blue;
+	background: @brand-blue;
+	font-size: .9rem;
+
+	a {
+		color: @white;
+		text-decoration: none;
+	}
+}
+
+.cc-answer-link {
+	float: right;
+}
+
+.cc-content-section {
+	margin-bottom: @spacing-default*2;
+}
+
+.cc-content-presentation {
+	@media (min-width: @breakpoint) {
+		width: calc(~"50% - " @spacing-default);
+		float: left;
+	}
+}
+
+.cc-content-stream {
+	@media (min-width: @breakpoint) {
+		width: calc(~"50% - " @spacing-default);
+		float: right;
+	}
+}
+
+.cc-presentation,
+.cc-stream {
+	position: relative;
+	width: 100%;
+	height: 0;
+	margin: 0 0 @spacing-default 0;
+	padding-bottom: 62.6%;
+
+	iframe {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+	}
+}
+
+.cc-html-playground {
+	flex: 1 1 auto;
+	padding: @spacing-default*2;
+	border-top: 1px solid @brand-grey-dark;
+}

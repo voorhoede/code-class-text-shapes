@@ -1,0 +1,52 @@
+{
+  "name": "code-class-text-shapes",
+  "version": "1.0.0",
+  "description": "Code class about text shapes",
+  "main": "index.js",
+  "scripts": {
+    "prebuild": "rimraf static/ && mkdirp static/",
+    "build": "run-s build:*",
+    "build:assets": "node scripts/copy-assets.js",
+    "build:css": "node scripts/build-css.js",
+    "build:html": "node scripts/build-html.js",
+    "build:js": "node scripts/build-js.js",
+    "prestart": "npm run build",
+    "start": "run-p start:server watch",
+    "start:server": "node index.js",
+    "watch": "npm-run-all --parallel watch:*",
+    "watch:assets": "chokidar 'src/assets/**/*' --command 'npm run build:assets'",
+    "watch:css": "chokidar 'src/**/*.less' --command 'npm run build:css'",
+    "watch:html": "chokidar 'src/**/*.html' --command 'npm run build:html'",
+    "watch:js": "chokidar 'src/**/*.js' --command 'npm run build:js'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:voorhoede/code-class-template.git"
+  },
+  "author": "De Voorhoede",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ],
+  "devDependencies": {
+    "bluebird": "3.7.2",
+    "chokidar-cli": "2.1.0",
+    "express": "4.17.1",
+    "gulp": "4.0.2",
+    "gulp-autoprefixer": "7.0.1",
+    "gulp-clean-css": "4.2.0",
+    "gulp-concat": "2.6.1",
+    "gulp-less": "4.0.1",
+    "gulp-plumber": "1.2.1",
+    "gulp-sourcemaps": "2.6.5",
+    "gulp-uglify": "3.0.2",
+    "mkdirp": "0.5.1",
+    "npm-run-all": "4.1.5",
+    "nunjucks": "3.2.0",
+    "rimraf": "3.0.0"
+  }
+}
