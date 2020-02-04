@@ -1,0 +1,202 @@
+<!-- Based on http://adobe-webplatform.github.io/Demo-for-Alice-s-Adventures-in-Wonderland/ -->
+<!DOCTYPE html>
+<html lang="en-US" class="shapes">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Demo for Alice's Adventures in Wonderland, by Lewis Carroll</title>
+<style>
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+}
+
+p {
+	margin: 0;
+	font-size: 1.2em;
+	line-height: 1.5;
+}
+
+.timeline-track {
+	width: 1px;
+	position: absolute;
+}
+
+.wrapper {
+	overflow-x: hidden;
+	font-size: 100%;
+	background: black;
+	position: relative;
+}
+
+.scene, .scene--alice {
+	position: fixed;
+}
+
+.scene--alice {
+	z-index: 1;
+	height: 1200px;
+	width: 1920px;
+	background: url('/assets/alice-background.jpg') left top;
+	background-size: 100%;
+}
+
+@media all and (max-width: 1280px) {
+	.scene--alice {
+		margin-left: -18em;
+	}
+}
+
+h1 {
+	font-size: 1em;
+	margin: 8em auto 3em;
+	width: 15em;
+	height: 9em;
+	padding-top: 9em;
+	overflow: hidden;
+	background: url('/assets/alice-title.png') center bottom no-repeat;
+	background-size: contain;
+}
+
+.content {
+	visibility: hidden;
+	position: relative;
+	height: 100%;
+	padding-top: 1px;
+}
+
+.content p {
+	will-change: margin;
+}
+
+html.shapes .content {
+	visibility: visible;
+}
+
+.shape-shim--left,
+.shape-shim--right {
+	height: 100%;
+	width: 50%;
+}
+
+/* TODO: add styling for CSS shapes */
+</style>
+</head>
+
+<body>
+<div class="timeline-track js-timeline-track"></div>
+
+<div class="wrapper">
+  <div class="scene--alice js-scene--alice">
+	<div class="content">
+		<div class="shape-shim--left"></div>
+		<div class="shape-shim--right"></div>
+
+		<h1 class="js-title">
+			<span>Alice in Wonderland</span>
+		</h1>
+
+		<p class="js-content">
+			Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, 'and what is the use of a book,' thought Alice 'without pictures or conversation?'
+			<br><br>
+			So she was considering in her own mind whether the pleasure of making a daisy-chain would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ranclose by her.
+			<br><br>
+			In another moment down went Alice after it, never once considering how in the world she was to get out again.
+		</p>
+	</div>
+  </div>
+</div>
+
+<script>
+(function(){
+	var $ = document.querySelector.bind(document);
+	Node.prototype.on = window.on = function(event, fn){ this.addEventListener(event, fn, false); };
+
+	var $sceneAlice = $('.js-scene--alice'),
+		$elContent  = $('.js-content'),
+		$elTitle    = $('.js-title'),
+		$elTrack    = $('.js-timeline-track');
+
+	var aliceBox   = $sceneAlice.getBoundingClientRect(),
+		contentBox = $elContent.getBoundingClientRect(),
+		titleBox   = $elTitle.getBoundingClientRect();
+
+	var timeline = [];
+
+	timeline.push({
+		min: aliceBox.top,
+		max: aliceBox.height,
+		freeze: false,
+		fn: function(progress){
+			if (this.freeze){
+				return;
+			}
+
+			var maxOffset = aliceBox.height - window.innerHeight;
+			var offset = -1 * Math.ceil((maxOffset * progress) / 100);
+
+			window.requestAnimationFrame(function(){
+				var str = 'translate3d(0, ' + offset + 'px, 0)';
+				$sceneAlice.style['-webkit-transform'] = str;
+				$sceneAlice.style['transform'] = str;
+			})
+		}
+	});
+
+	timeline.push({
+		min: timeline[timeline.length - 1].min * 1.4  + contentBox.top,
+		max: timeline[timeline.length - 1].min * 1.4 + contentBox.top + contentBox.height,
+		freeze: false,
+		fn: function(progress){
+			if (this.freeze){
+				return;
+			}
+
+			var maxOffset = aliceBox.height - contentBox.top;
+			var offset = Math.ceil((maxOffset * progress) / 100);
+
+			window.requestAnimationFrame(function(){
+				$elContent.style['margin-top'] = offset + 'px';
+			})
+		}
+	});
+
+	function setup(){
+		var max = 0;
+
+		timeline.forEach(function(t){
+			max = (max < t.max) ? t.max : max;
+		});
+
+		$elTrack.style.height = window.innerHeight + Math.round(max) + "px";
+
+		window.on('scroll', function(e){
+			var scrollY = window.scrollY;
+
+			timeline.forEach(function(t){
+				if (t.min < scrollY && scrollY < t.max){
+					var progress = (scrollY - t.min) / (t.max - t.min);
+					t.freeze = false;
+					t.fn.call(t, Math.ceil(progress * 100));
+				}
+
+				if (scrollY > t.max){
+					t.fn.call(t, 100);
+					t.freeze = true;
+				}
+
+				if (scrollY < t.min){
+					t.fn.call(t, 0);
+					t.freeze = true;
+				}
+			})
+		});
+	}
+
+	setup();
+})();
+</script>
+</body>
+</html>
